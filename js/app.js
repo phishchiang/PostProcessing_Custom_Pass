@@ -183,6 +183,7 @@ export default class Sketch {
 
     this.mesh.rotation.y  = this.time/100;
     this.mesh.rotation.x  = this.time/30;
+    this.custom_pass.uniforms.uTime.value = this.time;
 
     this.material.uniforms.time.value = this.time;
     requestAnimationFrame(this.render.bind(this));
