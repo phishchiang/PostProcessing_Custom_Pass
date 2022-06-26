@@ -6,6 +6,7 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { PostProcessing } from "./postprocessing.js";
+import { PP_Chromatic_Aberration } from "./PP_Chromatic_Aberration.js";
 
 
 import fragment from "./shader/fragment.glsl";
@@ -43,7 +44,7 @@ export default class Sketch {
     // var frustumSize = 10;
     // var aspect = window.innerWidth / window.innerHeight;
     // this.camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, -1000, 1000 );
-    this.camera.position.set(0, 0, 15);
+    this.camera.position.set(0, 0, 3);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.time = 0;
@@ -64,19 +65,21 @@ export default class Sketch {
     this.bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.9, 0.85 );
 
     this.custom_pass = new ShaderPass( PostProcessing );
+    this.Pass_Chromatic_Aberration = new ShaderPass( PP_Chromatic_Aberration );
 
 
     this.composer = new EffectComposer( this.renderer );
     this.composer.addPass( this.renderScene );
     this.composer.addPass( this.bloomPass );
     this.composer.addPass( this.custom_pass );
+    this.composer.addPass( this.Pass_Chromatic_Aberration );
   }
 
   settings() {
     let that = this;
     this.settings = {
       progress: 0.6,
-      uShiftVal: 1.0,
+      uShiftVal: 0.25,
     };
     this.gui = new dat.GUI();
     this.gui.add(this.settings, "progress", 0, 6, 0.01);
@@ -183,10 +186,10 @@ export default class Sketch {
     if (!this.isPlaying) return;
     this.time += 0.05;
 
-    this.mesh.rotation.y  = this.time/100;
-    this.mesh.rotation.x  = this.time/30;
-    this.custom_pass.uniforms.uTime.value = this.time;
-    this.custom_pass.uniforms.uShiftVal.value = this.settings.uShiftVal;
+    // this.mesh.rotation.y  = this.time/100;
+    // this.mesh.rotation.x  = this.time/30;
+    // this.custom_pass.uniforms.uTime.value = this.time;
+    // this.custom_pass.uniforms.uShiftVal.value = this.settings.uShiftVal;
 
     this.material.uniforms.time.value = this.time;
     requestAnimationFrame(this.render.bind(this));
