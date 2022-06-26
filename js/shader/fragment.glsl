@@ -10,6 +10,7 @@ uniform vec4 resolution;
 varying vec2 vUv;
 varying vec3 vPosition;
 varying vec3 vNormal;
+varying vec3 vNormalFollow;
 varying vec3 vEyeVector;
 varying vec3 vBary;
 
@@ -22,15 +23,15 @@ vec2 hash22(vec2 p){
 void main()	{
 	// vec2 newUV = (vUv - vec2(0.5))*resolution.zw + vec2(0.5);
 
-	vec3 X = dFdx(vNormal);
-	vec3 Y = dFdy(vNormal);
-	vec3 normal=normalize(cross(X,Y));
-	float diffuse = dot(normal, vec3(1.0));
+	vec3 X = dFdx(vNormalFollow);
+	vec3 Y = dFdy(vNormalFollow);
+	vec3 new_normal = normalize(cross(X,Y));
+	float diffuse = dot(new_normal, vec3(1.0));
 	vec2 randUV = hash22(vec2(floor(diffuse*5.0)));
 
 	vec2 newUv = randUV * gl_FragCoord.xy/vec2(1000.0);
 
-	vec3 refracted = refract(vEyeVector, normal, 1./3.);
+	vec3 refracted = refract(vEyeVector, new_normal, 1./3.);
 	newUv += refracted.xy * 0.2;
 
 	vec4 t = texture2D(uTexture, newUv);
@@ -40,13 +41,15 @@ void main()	{
 	vec3 s = smoothstep( d * (width + 0.5), d * (width - 0.5), vBary);
 	float line = max(s.x, max(s.y, s.z));
 
+	float fresnel = abs(dot(vEyeVector, vNormalFollow));
+
 
 	// gl_FragColor = vec4(diffuse,diffuse, diffuse,1.);
 	// gl_FragColor = vec4(diffuse*5.0,diffuse*5.0, diffuse*5.0,1.);
 	// gl_FragColor = vec4(floor(diffuse*5.0), floor(diffuse*5.0), floor(diffuse*5.0),1.);
 	// gl_FragColor = vec4(randUV.x, randUV.x, randUV.x,1.);
 	// gl_FragColor = vec4(randUV, 0.0,1.);
-	// gl_FragColor = t;
-	gl_FragColor = vec4(line,line, line, 1.0);
+	gl_FragColor = t;
+	// gl_FragColor = vec4(fresnel, fresnel, fresnel, 1.0);
 	// gl_FragColor = vec4(d, 1.0);
 }

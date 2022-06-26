@@ -76,9 +76,11 @@ export default class Sketch {
     let that = this;
     this.settings = {
       progress: 0.6,
+      uShiftVal: 1.0,
     };
     this.gui = new dat.GUI();
     this.gui.add(this.settings, "progress", 0, 6, 0.01);
+    this.gui.add(this.settings, "uShiftVal", 0, 1, 0.01);
   }
 
   setupResize() {
@@ -184,6 +186,7 @@ export default class Sketch {
     this.mesh.rotation.y  = this.time/100;
     this.mesh.rotation.x  = this.time/30;
     this.custom_pass.uniforms.uTime.value = this.time;
+    this.custom_pass.uniforms.uShiftVal.value = this.settings.uShiftVal;
 
     this.material.uniforms.time.value = this.time;
     requestAnimationFrame(this.render.bind(this));
