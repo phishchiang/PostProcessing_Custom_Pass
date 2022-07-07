@@ -1,4 +1,4 @@
-const PP_Chromatic_Aberration = {
+const chromatic_aberration_pass = {
   uniforms: {
     'tDiffuse': {value: null},
     'resolution': {value: null},
@@ -69,5 +69,5 @@ const PP_Chromatic_Aberration = {
   `
 };
 
-export { PP_Chromatic_Aberration };
+export { chromatic_aberration_pass };
 

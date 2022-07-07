@@ -5,8 +5,8 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { PostProcessing } from "./postprocessing.js";
-import { PP_Chromatic_Aberration } from "./PP_Chromatic_Aberration.js";
+import { custom_pass } from "./custom_pass.js";
+import { chromatic_aberration_pass } from "./chromatic_aberration_pass.js";
 
 
 import fragment from "./shader/fragment.glsl";
@@ -60,19 +60,19 @@ export default class Sketch {
   }
 
   initpost() {
-    this.renderScene = new RenderPass( this.scene, this.camera );
+    this.render_pass = new RenderPass( this.scene, this.camera );
 
-    this.bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.9, 0.85 );
+    this.bloom_pass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.9, 0.85 );
 
-    this.custom_pass = new ShaderPass( PostProcessing );
-    this.Pass_Chromatic_Aberration = new ShaderPass( PP_Chromatic_Aberration );
+    this.custom_pass = new ShaderPass( custom_pass );
+    this.chromatic_aberration_pass = new ShaderPass( chromatic_aberration_pass );
 
 
     this.composer = new EffectComposer( this.renderer );
-    this.composer.addPass( this.renderScene );
-    this.composer.addPass( this.bloomPass );
+    this.composer.addPass( this.render_pass );
+    this.composer.addPass( this.bloom_pass );
     this.composer.addPass( this.custom_pass );
-    this.composer.addPass( this.Pass_Chromatic_Aberration );
+    this.composer.addPass( this.chromatic_aberration_pass );
   }
 
   settings() {

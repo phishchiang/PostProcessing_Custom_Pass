@@ -1,4 +1,4 @@
-const PostProcessing = {
+const custom_pass = {
   uniforms: {
     'tDiffuse': {value: null},
     'uShiftVal': {value: 0},
@@ -52,5 +52,5 @@ const PostProcessing = {
   }`
 };
 
-export { PostProcessing };
+export { custom_pass };
 
